@@ -51,7 +51,7 @@ function ProductTable({productsList,checked, rechercheTexte}) {
   }
 
   if(rechercheTexte.length > 0) {
-    productsList = productsList.filter((product) => product.name == rechercheTexte)
+    productsList = productsList.filter((product) => product.name.toLowerCase() == rechercheTexte.toLowerCase())
   }
   
   
