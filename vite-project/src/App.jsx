@@ -39,7 +39,6 @@ function SearchBar({checked, onChange, rechercheTexte, handleChange}) {
 
   return <>
   <Input placeHolder={"Entrer un Produit"} value={rechercheTexte} onChange={handleChange}></Input>
-  <p>{rechercheTexte}</p>
     <CheckBox checked={checked} onChange={onChange} label={"Afficher les produits en stock"}></CheckBox>
   </>
 }
