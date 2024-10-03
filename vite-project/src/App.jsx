@@ -61,7 +61,7 @@ function ProductTable({productsList,checked, rechercheTexte}) {
       lastCategories = product.category
       products.push(<ProductCategory key={product.category} name={product.category}></ProductCategory>)
     }
-    products.push(<ProductRow name={product.name} price={product.price} isStocked={product.isStocked}></ProductRow>)
+    products.push(<ProductRow name={product.name} price={product.price} isStocked={product.stocked}></ProductRow>)
   }
 
   return <>
