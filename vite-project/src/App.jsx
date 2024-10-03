@@ -1,4 +1,8 @@
 import { useState } from "react"
+import { ProductCategory } from "./product/ProductCategory"
+import { ProductRow } from "./product/ProductRow"
+import { CheckBox } from "./forms/CheckBox"
+import { Input } from "./forms/Input"
 
 
 
@@ -13,78 +17,67 @@ const PRODUCTS = [
 
 
 function App() {
-    
+  const [isChecked, setIsChecked] = useState(false)
+  function toogleChecked() {
+    setIsChecked(!isChecked)
+  }
+
+  const [rechercheTexte, setRechercheTexte] = useState("")
+  const handleChange = e => {
+    setRechercheTexte(e.target.value)
+  }
     return <>
     <h1>TP React : Liste de produit</h1>
-    <SearchBar></SearchBar>
+    <SearchBar checked={isChecked} onChange={toogleChecked} rechercheTexte={rechercheTexte} handleChange={handleChange}></SearchBar>
+    <ProductTable productsList={PRODUCTS} checked={isChecked} rechercheTexte={rechercheTexte}></ProductTable>
     </>
     
     
 }
 
-function SearchBar() {
+function SearchBar({checked, onChange, rechercheTexte, handleChange}) {
+
   return <>
-  <Input></Input>
-  <CheckBox></CheckBox>
-  <ProductTable></ProductTable>
+  <Input placeHolder={"Entrer un Produit"} value={rechercheTexte} onChange={handleChange}></Input>
+  <p>{rechercheTexte}</p>
+    <CheckBox checked={checked} onChange={onChange} label={"Afficher les produits en stock"}></CheckBox>
   </>
 }
 
-function Input() {
-  return <input type="text"></input>
-}
+function ProductTable({productsList,checked, rechercheTexte}) {
+  const products = []
+  if(checked) {
+    productsList = productsList.filter((product) => product.stocked == true)
+  }
 
-function CheckBox() {
-  const [checked, setChecked] = useState(false) 
-    const toggleCheckBox= () => {
-      setChecked(!checked)
+  if(rechercheTexte.length > 0) {
+    productsList = productsList.filter((product) => product.name == rechercheTexte)
+  }
+  
+  
+  let lastCategories = null
+  for(let product of productsList ) {
+    if(product.category != lastCategories) {
+      lastCategories = product.category
+      products.push(<ProductCategory key={product.category} name={product.category}></ProductCategory>)
     }
-  return <>
-  <input type="checkbox"  checked ={checked} onChange={toggleCheckBox}></input>
-  Only show product in stock
-  <p>{checked.toString()}</p>
-  </>
+    products.push(<ProductRow name={product.name} price={product.price} isStocked={product.isStocked}></ProductRow>)
+  }
 
-}
-
-function ProductTable() {
-  return <>
-      <table>
-        <ProductCategoryRow></ProductCategoryRow>
-        <ProductRow></ProductRow>
-      </table>
-    
-  </>
-}
-
-function ProductCategoryRow() {
   return <>
     <thead>
-      <th scope="col">Name</th>
-      <th scope="col">Price</th>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Price</th>
+      </tr>
     </thead>
+    <tbody>
+    {products}
+    </tbody>
   </>
 }
 
-function ProductRow({checked}) {
-    const productInStock = PRODUCTS.filter(product => {
-      product.stocked
-    }
-      )
-    if({checked}) {
-      return <p>Hello</p>
-    } else {
-      return <>
-      {PRODUCTS.map(product => (
-        <tr key={product.name}>
-        <th scope="row">{product.name}</th>
-        <td>{product.price}</td>
-      </tr>
-      ))}
-    </>
-    }
-    
-}
+
 
 
 export default App
